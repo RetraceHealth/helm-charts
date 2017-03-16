@@ -1,47 +1,47 @@
-
-kind: Deployment
 apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
-  name: {{ printf "%s-%s-smtp" .Release.Name .Chart.Name }}
+  name: {{ template "fullname" . }}
   labels:
-    app: {{ printf "%s-%s" .Release.Name .Chart.Name }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
-  replicas: {{.Values.replicaCount}}
+  replicas: {{ .Values.replicaCount }}
   template:
     metadata:
-      name: {{ printf "%s-%s-smtp" .Release.Name .Chart.Name }}
       labels:
-        app: {{ printf "%s-%s" .Release.Name .Chart.Name }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-        release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        app: {{ template "fullname" . }}
     spec:
-      imagePullSecrets:
-        - name: retrace-docker
       containers:
-        - name: {{ printf "%s-%s" .Release.Name .Chart.Name }}
-          image: {{.Values.image}}
-          args: 
-            - -addr=:80
-            - "-sender-email={{.Values.emailFromAddress}}"
-          env:
-            - name: BUSINESS_EMAIL_TO
-              value: {{.Values.businessEmailToAddress}}
-            - name: CAREER_EMAIL_TO
-              value: {{.Values.careerEmailToAddress}}
-            - name: SMTP_HOST
-              value: {{.Values.smtpServer}}
-            - name: SMTP_PORT
-              value: "{{.Values.smtpPort}}"
-            - name: SMTP_USERNAME
-              valueFrom:
-                secretKeyRef: {name: {{ printf "%s-%s-smtp" .Release.Name .Chart.Name }}, key: username}
-            - name: SMTP_PASSWORD
-              valueFrom:
-                secretKeyRef: {name: {{ printf "%s-%s-smtp" .Release.Name .Chart.Name }}, key: password}
-          ports:
-            - containerPort: 80
-          readinessProbe: {httpGet: {port: 80, path: /health}}
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: 
+          - -addr=:80
+          - "-sender-email={{.Values.email.from}}"
+        env:
+          - name: BUSINESS_EMAIL_TO
+            value: {{.Values.email.to.business}}
+          - name: CAREER_EMAIL_TO
+            value: {{.Values.email.to.career}}
+          - name: SMTP_HOST
+            value: {{.Values.smtp.server}}
+          - name: SMTP_PORT
+            value: "{{.Values.smtp.port}}"
+          - name: SMTP_USERNAME
+            valueFrom:
+              secretKeyRef: {name: {{ template "fullname" . }}, key: username}
+          - name: SMTP_PASSWORD
+            valueFrom:
+              secretKeyRef: {name: {{ template "fullname" . }}, key: password}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.internalPort }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
