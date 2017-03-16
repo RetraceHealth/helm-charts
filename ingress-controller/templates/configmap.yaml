@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  disable-ipv6: "true"
+kind: ConfigMap
+metadata:
+  name: {{template "fullname" .}}
+  namespace: kube-system

@@ -1,0 +1,4 @@
+image: gcr.io/google_containers/nginx-ingress-controller:0.9.0-beta.3
+replicaCount: 1
+defaultBackendImage: gcr.io/google_containers/defaultbackend:1.0
+serviceType: LoadBalancer

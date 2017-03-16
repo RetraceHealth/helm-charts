@@ -1,0 +1,4 @@
+image: jetstack/kube-lego:0.1.3
+email: piedpiper@retracehealth.com
+
+staging: true

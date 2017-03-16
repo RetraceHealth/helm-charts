@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Chart.Name }}
+  {{- if .Values.prometheus }}
+  annotations:
+    prometheus.io/scrape: "true"
+  {{- end }}
+  labels:
+      app: {{ printf "%s-%s" .Release.Name .Chart.Name }}
+      chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: {{ printf "%s-%s" .Release.Name .Chart.Name }}

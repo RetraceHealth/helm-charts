@@ -1,0 +1,47 @@
+
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ printf "%s-%s-smtp" .Release.Name .Chart.Name }}
+  labels:
+    app: {{ printf "%s-%s" .Release.Name .Chart.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{.Values.replicaCount}}
+  template:
+    metadata:
+      name: {{ printf "%s-%s-smtp" .Release.Name .Chart.Name }}
+      labels:
+        app: {{ printf "%s-%s" .Release.Name .Chart.Name }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      imagePullSecrets:
+        - name: retrace-docker
+      containers:
+        - name: {{ printf "%s-%s" .Release.Name .Chart.Name }}
+          image: {{.Values.image}}
+          args: 
+            - -addr=:80
+            - "-sender-email={{.Values.emailFromAddress}}"
+          env:
+            - name: BUSINESS_EMAIL_TO
+              value: {{.Values.businessEmailToAddress}}
+            - name: CAREER_EMAIL_TO
+              value: {{.Values.careerEmailToAddress}}
+            - name: SMTP_HOST
+              value: {{.Values.smtpServer}}
+            - name: SMTP_PORT
+              value: "{{.Values.smtpPort}}"
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef: {name: {{ printf "%s-%s-smtp" .Release.Name .Chart.Name }}, key: username}
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: {{ printf "%s-%s-smtp" .Release.Name .Chart.Name }}, key: password}
+          ports:
+            - containerPort: 80
+          readinessProbe: {httpGet: {port: 80, path: /health}}

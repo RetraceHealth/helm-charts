@@ -1,0 +1,17 @@
+
+image: retrace/contact-mailer
+
+replicaCount: 1
+
+# turn on/off prometheus scraping annotation
+prometheus: true
+
+emailFromAddress: scheduling-sandbox@retracehealth.com
+businessEmailToAddress: piedpiper@retracehealth.com
+careerEmailToAddress: piedpiper@retracehealth.com
+
+# SMTP server details
+smtpServer: email-smtp.us-east-1.amazonaws.com
+smtpPort: 587
+smtpUsername: ""
+smtpPassword: ""
