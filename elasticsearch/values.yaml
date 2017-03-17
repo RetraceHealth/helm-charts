@@ -1,0 +1,21 @@
+# Default values for elasticsearch.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: elasticsearch
+  tag: 5-alpine
+  pullPolicy: IfNotPresent
+service:
+  name: elasticsearch
+  type: ClusterIP
+  externalPort: 9200
+resources:
+  limits:
+    cpu: 350m
+    memory: 512Mi
+  requests:
+    cpu: 350m
+    memory: 512Mi
+
+javaOpts: -Xms256m -Xmx256m
+volumeSize: 1Gi

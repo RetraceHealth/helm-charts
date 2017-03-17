@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      imagePullSecrets:
+        - name: retrace
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: [ "-addr=:{{.Values.service.internalPort}}" ]
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        env:
+          - name: DB_CONNECT
+            valueFrom:
+              secretKeyRef: {name: {{template "fullname" .}}, key: dbConnect}
+        readinessProbe: {httpGet: {port: {{ .Values.service.internalPort }}, path: /health}}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}

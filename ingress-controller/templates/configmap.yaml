@@ -1,7 +1,7 @@
 apiVersion: v1
-data:
-  disable-ipv6: "true"
 kind: ConfigMap
 metadata:
-  name: {{template "fullname" .}}
   namespace: kube-system
+  name: {{template "fullname" .}}
+data:
+  nginx.tmpl: {{include "nginx.tmpl" . | quote}}

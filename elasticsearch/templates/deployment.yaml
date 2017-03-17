@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+          - containerPort: 9200
+          readinessProbe:
+            tcpSocket: {port: 9200}
+          env:
+            - name: ES_JAVA_OPTS
+              value: "{{.Values.javaOpts}}"
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+              subPath: elastic-data
+          resources:
+{{ toYaml .Values.resources | indent 14 }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ template "fullname" . }}

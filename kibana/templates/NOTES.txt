@@ -1,0 +1,1 @@
+kibanaURL=http://{{template "fullname" .}}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.externalPort }}
