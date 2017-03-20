@@ -1,0 +1,21 @@
+# Default values for node-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: prom/node-exporter
+  tag: latest
+  pullPolicy: Always
+service:
+  name: nginx
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+

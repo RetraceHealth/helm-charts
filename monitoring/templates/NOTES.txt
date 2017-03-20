@@ -1,0 +1,4 @@
+
+Prometheus: https://{{.Values.global.domain}}/prometheus
+Kibana:     https://{{.Values.global.domain}}/kibana
+Grafana:    https://{{.Values.global.domain}}/grafana

@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        args:
+          - -config.file=/etc/prometheus/prometheus.yml
+          - -storage.local.path=/prometheus
+          - -web.console.libraries=/usr/share/prometheus/console_libraries
+          - -web.console.templates=/usr/share/prometheus/consoles
+          - -web.external-url=https://{{.Values.global.domain}}/prometheus/
+          - -web.route-prefix=/
+          - -web.listen-address=:{{.Values.service.internalPort}}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+        volumeMounts:
+          - name: data
+            mountPath: /prometheus
+          - name: config-volume
+            mountPath: /etc/prometheus
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{template "fullname" .}}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{template "fullname" .}}

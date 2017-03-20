@@ -1,8 +1,9 @@
-# Default values for fluentd.
+# Default values for prometheus.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
 image:
-  repository: quay.io/fluent/fluentd-kubernetes-daemonset
+  repository: prom/prometheus
   tag: latest
   pullPolicy: IfNotPresent
 service:
@@ -12,9 +13,10 @@ service:
   internalPort: 80
 resources:
   limits:
-    cpu: 100m
-    memory: 200Mi
+    cpu: 200m
+    memory: 1Gi
   requests:
-    cpu: 100m
-    memory: 200Mi
+    cpu: 200m
+    memory: 1Gi
 
+volumeSize: 1Gi

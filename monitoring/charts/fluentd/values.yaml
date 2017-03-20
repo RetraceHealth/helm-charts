@@ -1,0 +1,22 @@
+# Default values for fluentd.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: quay.io/fluent/fluentd-kubernetes-daemonset
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  name: nginx
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+resources:
+  limits:
+    cpu: 100m
+    memory: 200Mi
+  requests:
+    cpu: 100m
+    memory: 200Mi
+
+elasticsearchHost: elasticsearch
+elasticsearchPort: 9200
