@@ -18,4 +18,4 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-elasticsearchURL: ""
+elasticsearchURL: "http://elasticsearch:9200"
