@@ -2,12 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
-image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+image: retrace/api-content
+pullPolicy: IfNotPresent
 service:
-  name: nginx
   type: ClusterIP
   externalPort: 80
   internalPort: 80
@@ -19,4 +16,11 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-dbConnect: ""
+global:
+  db:
+    host: localhost
+    port: 3306
+    user: root
+    pass: ""
+
+dbName: content

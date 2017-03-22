@@ -26,9 +26,9 @@ spec:
           - name: CAREER_EMAIL_TO
             value: {{.Values.email.to.career}}
           - name: SMTP_HOST
-            value: {{.Values.smtp.server}}
+            value: {{.Values.global.smtp.server}}
           - name: SMTP_PORT
-            value: "{{.Values.smtp.port}}"
+            value: "{{.Values.global.smtp.port}}"
           - name: SMTP_USERNAME
             valueFrom:
               secretKeyRef: {name: {{ template "fullname" . }}, key: username}

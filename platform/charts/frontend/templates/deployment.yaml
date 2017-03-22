@@ -17,13 +17,19 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        args: [ "-addr=:{{.Values.service.internalPort}}" ]
         ports:
         - containerPort: {{ .Values.service.internalPort }}
-        env:
-          - name: DB_CONNECT
-            valueFrom:
-              secretKeyRef: {name: {{template "fullname" .}}, key: dbConnect}
-        readinessProbe: {httpGet: {port: {{ .Values.service.internalPort }}, path: /health}}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.internalPort }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "kill -QUIT 1; while kill -0 1; do sleep 1; done"]
         resources:
 {{ toYaml .Values.resources | indent 12 }}

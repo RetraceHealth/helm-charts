@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate-{{template "fullname" .}}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+  annotations:
+    "helm.sh/hook": pre-install
+spec:
+  template:
+    metadata:
+      name: migrate-{{template "fullname" .}}
+    spec:
+      imagePullSecrets:
+      - name: retrace
+      containers:
+      - name: migrate
+        image: {{.Values.image}}
+        command:
+          - sh
+          - -exc
+          - |
+            mysql "-h$DB_HOST" "-P$DB_PORT" "-u$DB_USER" "-p$DB_PASS" "-eCREATE DATABASE $DB_NAME" || true
+            cd /migrations
+            migrate -url "mysql://$DB_USER:$DB_PASS@tcp($DB_HOST:$DB_PORT)/$DB_NAME" up
+        env:
+          - name: DB_NAME
+            value: {{.Values.dbName | quote}}
+          - name: DB_HOST
+            value: {{.Values.global.db.host | quote}}
+          - name: DB_PORT
+            value: {{.Values.global.db.port | quote}}
+          - name: DB_USER
+            value: {{.Values.global.db.user | quote}}
+          - name: DB_PASS
+            value: {{.Values.global.db.pass | quote}}
+      restartPolicy: Never

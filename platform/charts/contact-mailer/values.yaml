@@ -7,7 +7,6 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 service:
-  name: contact-mailer
   type: ClusterIP
   externalPort: 80
   internalPort: 80
@@ -19,9 +18,6 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-# turn on/off prometheus scraping annotation
-prometheus: true
-
 email:
   from: scheduling-sandbox@retracehealth.com
   to:
@@ -29,8 +25,9 @@ email:
     career: piedpiper@retracehealth.com
 
 # SMTP server details
-smtp:
-  server: email-smtp.us-east-1.amazonaws.com
-  port: 587
-  username: ""
-  password: ""
+global:
+  smtp:
+    host: email-smtp.us-east-1.amazonaws.com
+    port: 587
+    user: ""
+    pass: ""
