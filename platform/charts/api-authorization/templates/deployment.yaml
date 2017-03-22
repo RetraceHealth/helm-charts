@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      imagePullSecrets:
+        - name: retrace
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        env:
+        - name: LOG_SUFFIX
+          value: -json
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{.Values.global.springProfile | quote}}
+        - name: JAVA_OPTS
+          value: {{.Values.javaOpts | quote}}
+        - name: API_AUTHORIZATION_DB_CONNECT
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: dbConnect}
+        - name: API_AUTHORIZATION_DB_USER
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: dbUser}
+        - name: API_AUTHORIZATION_DB_PASSWORD
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: dbPass}
+        - name: NOTIFICATION_SERVICE_PASSWORD
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: notificationSecret}
+        - name: SCHEDULING_SERVICE_PASSWORD
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: schedulingSecret}
+        - name: ACCOUNT_SERVICE_PASSWORD
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: accountSecret}
+        - name: JWT_TOKEN_SIGNING_KEY
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: jwtSecret}
+        - name: TASK_SCHEDULER_SERVICE_PASSWORD
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: taskSchedSecret}
+        readinessProbe: {httpGet: {port: {{.Values.service.internalPort}}, path: /health}}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}

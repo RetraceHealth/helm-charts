@@ -23,10 +23,14 @@ spec:
         env:
           - name: CLIENT_SECRET
             valueFrom:
-              secretKeyRef: {name: task-scheduler, key: clientSecret}
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: clientSecret
           - name: DB_CONNECT
             valueFrom:
-              secretKeyRef: {name: task-scheduler, key: dbConnect}
+              secretKeyRef:
+                name: {{ template "fullname" . }}
+                key: dbConnect
         ports:
           - containerPort: {{.Values.service.internalPort}}
         readinessProbe: {httpGet: {port: {{.Values.service.internalPort}}, path: /health}}
