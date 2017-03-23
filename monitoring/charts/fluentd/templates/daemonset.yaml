@@ -19,9 +19,9 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name:  FLUENT_ELASTICSEARCH_HOST
-            value: {{.Values.elasticsearchHost}}
+            value: "elasticsearch.{{.Release.Namespace}}"
           - name:  FLUENT_ELASTICSEARCH_PORT
-            value: {{.Values.elasticsearchPort | quote}}
+            value: "9200"
         volumeMounts:
         - name: mnt
           mountPath: /mnt

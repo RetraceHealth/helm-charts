@@ -17,6 +17,3 @@ resources:
   requests:
     cpu: 100m
     memory: 200Mi
-
-elasticsearchHost: elasticsearch
-elasticsearchPort: 9200

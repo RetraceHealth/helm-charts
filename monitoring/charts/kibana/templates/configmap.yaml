@@ -5,4 +5,4 @@ metadata:
 data:
   kibana.yml: |
     server.host: '0.0.0.0'
-    elasticsearch.url: '{{.Values.elasticsearchURL}}'
+    elasticsearch.url: http://elasticsearch:9200

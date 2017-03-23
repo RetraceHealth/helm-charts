@@ -19,5 +19,8 @@ resources:
     cpu: 100m
     memory: 128Mi
 
+
+kibana.elasticsearchURL: http://elasticsearch:9200
+
 global:
   domain: monitoring-localdev.retracehealth.com

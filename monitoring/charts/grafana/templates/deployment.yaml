@@ -26,12 +26,17 @@ spec:
             value: "true"
           - name: GF_AUTH_BASIC_ENABLED
             value: "false"
-          - name: GF_DATABASE_URL
-            valueFrom:
-              secretKeyRef: {name: {{template "fullname" .}}, key: dbConnect}
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/grafana
+          subPath: grafana-data
         readinessProbe:
           httpGet:
             path: /
             port: {{ .Values.service.internalPort }}
         resources:
 {{ toYaml .Values.resources | indent 12 }}
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: grafana-pv-claim
