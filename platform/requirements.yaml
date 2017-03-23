@@ -1,0 +1,9 @@
+dependencies:
+- name: mysql
+  condition: createDB
+
+- name: api-account
+- name: api-authorization
+- name: api-content
+- name: frontend
+- name: task-scheduler
