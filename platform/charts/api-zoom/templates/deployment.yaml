@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      imagePullSecrets:
+        - name: retrace
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.name }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        env:
+        - name: LOG_SUFFIX
+          value: -json
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{.Values.global.springProfile | quote}}
+        - name: JAVA_OPTS
+          value: {{.Values.javaOpts | quote}}
+        - name: API_ZOOM_KEY
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: zoomKey}
+        - name: API_ZOOM_SECRET
+          valueFrom:
+            secretKeyRef: {name: {{ template "fullname" . }}, key: zoomSecret}
+        readinessProbe: {httpGet: {port: {{.Values.service.internalPort}}, path: /health}}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
