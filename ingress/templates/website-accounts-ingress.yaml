@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: website-accounts-{{template "fullname" .}}
+  annotations:
+    {{- if .Values.global.tls}}
+    kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/auth-signin: https://$host/oauth2/start?rd=$request_uri
+    ingress.kubernetes.io/auth-url: http://oauth2-proxy.kube-system.svc.cluster.local:4180/oauth2/auth
+    {{- end}}
+    ingress.kubernetes.io/rewrite-target: /accounts
+spec:
+  {{- if .Values.global.tls}}
+  tls:
+    - hosts:
+        - {{.Values.global.domains.website}}
+      secretName: dev-tls
+  {{- end}}
+  rules:
+  - host: {{.Values.global.domains.website}}
+    http:
+      paths:
+      - path: /gateway/accounts
+        backend:
+          serviceName: api-account
+          servicePort: 6000

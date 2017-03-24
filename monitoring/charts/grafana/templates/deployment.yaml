@@ -21,7 +21,7 @@ spec:
           - name: GF_SERVER_HTTP_PORT
             value: {{.Values.service.internalPort | quote}}
           - name: GF_SERVER_ROOT_URL
-            value: https://{{.Values.global.domain}}/grafana
+            value: {{if .Values.global.tls}}https{{else}}http{{end}}://{{.Values.global.domains.monitoring}}/grafana
           - name: GF_AUTH_ANONYMOUS_ENABLED
             value: "true"
           - name: GF_AUTH_BASIC_ENABLED

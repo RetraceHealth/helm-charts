@@ -1,0 +1,6 @@
+
+Website:    {{if .Values.global.tls}}https{{else}}http{{end}}://{{.Values.global.domains.website}}
+Admin:      {{if .Values.global.tls}}https{{else}}http{{end}}://{{.Values.global.domains.website}}/admin
+Kibana:     {{if .Values.global.tls}}https{{else}}http{{end}}://{{.Values.global.domains.monitoring}}/kibana
+Grafana:    {{if .Values.global.tls}}https{{else}}http{{end}}://{{.Values.global.domains.monitoring}}/grafana
+Prometheus: {{if .Values.global.tls}}https{{else}}http{{end}}://{{.Values.global.domains.monitoring}}/prometheus

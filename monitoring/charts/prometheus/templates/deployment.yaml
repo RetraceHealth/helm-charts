@@ -23,7 +23,7 @@ spec:
           - -storage.local.path=/prometheus
           - -web.console.libraries=/usr/share/prometheus/console_libraries
           - -web.console.templates=/usr/share/prometheus/consoles
-          - -web.external-url=https://{{.Values.global.domain}}/prometheus/
+          - -web.external-url={{if .Values.global.tls}}https{{else}}http{{end}}://{{.Values.global.domains.monitoring}}/prometheus/
           - -web.route-prefix=/
           - -web.listen-address=:{{.Values.service.internalPort}}
         readinessProbe:

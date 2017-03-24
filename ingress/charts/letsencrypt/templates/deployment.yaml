@@ -25,7 +25,7 @@ spec:
         - name: LEGO_EMAIL
           value: {{.Values.email}}
         - name: LEGO_URL
-          value: {{if .Values.staging}}"https://acme-v01.api.letsencrypt.org/directory"{{else}}"https://acme-staging.api.letsencrypt.org/directory"{{end}}
+          value: "https://acme-v01.api.letsencrypt.org/directory"
         - name: LEGO_NAMESPACE
           valueFrom:
             fieldRef:
