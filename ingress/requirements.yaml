@@ -1,0 +1,6 @@
+dependencies:
+- name: ingress-controller
+- name: letsencrypt
+  condition: global.tls
+- name: oauth-gateway
+  condition: global.tls
