@@ -15,7 +15,7 @@ spec:
         - name: retrace
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: "{{ .Values.image.name }}{{ .Values.image.version }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args: 
           - -addr=:80

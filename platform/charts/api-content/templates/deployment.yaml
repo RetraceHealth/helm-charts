@@ -15,8 +15,8 @@ spec:
         - name: retrace
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image }}"
-        imagePullPolicy: {{ .Values.pullPolicy }}
+        image: {{ .Values.image.name }}{{ .Values.image.version }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         args: [ "-addr=:{{.Values.service.internalPort}}" ]
         ports:
         - containerPort: {{ .Values.service.internalPort }}

@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  repository: retrace/contact-mailer
+  name: retrace/contact-mailer
   tag: latest
   pullPolicy: IfNotPresent
 service:

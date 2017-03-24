@@ -1,21 +1,12 @@
-# Default values for platform.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-replicaCount: 1
-image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
-service:
-  name: nginx
-  type: ClusterIP
-  externalPort: 80
-  internalPort: 80
-resources:
-  limits:
-    cpu: 100m
-    memory: 128Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
 
+api-account: {image: {version: ":latest"}}
+api-audit: {image: {version: ":latest"}}
+api-authorization: {image: {version: ":latest"}}
+api-content: {image: {version: ":latest"}}
+api-google: {image: {version: ":latest"}}
+api-notification: {image: {version: ":latest"}}
+api-scheduling: {image: {version: ":latest"}}
+api-zoom: {image: {version: ":latest"}}
+contact-mailer: {image: {version: ":latest"}}
+frontend: {image: {version: ":latest"}}
+task-scheduler: {image: {version: ":latest"}}
